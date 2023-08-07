@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star Fleet Academy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+  <div id="btnRow" class="d-flex justify-content-between mb-3 btnRow"></div>
+  <!-- <div class="bg-image" style="background-image: url('https://th.bing.com/th/id/R.4a666b16cf8a15b9687edb5085012589?rik=65TLAWzZC8QAVA&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fBXc1IXP.jpg&ehk=OO5I38xkPYQKTw080NTp%2bOvZ7KtlZJZx3GNhG6icris%3d&risl=&pid=ImgRaw&r=0');"></div> -->
+  
+  <div class="container mt-5">
+    <div id="sortingHatCard" class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Star Fleet Academy</h5>
+        <p class="card-text">Hello I'm your Sorting AI please click the button to begin!</p>
+        <button id="startSortingBtn" class="btn btn-primary">Sort Cadet</button>
+      </div>
+    </div>
+
+    <div id="sortingForm" class="card mt-5 d-none">
+      <div class="card-body">
+        <h5 class="card-title">Sorting Form</h5>
+        <div class="form-group">
+          <label for="studentName">Cadet Name</label>
+          <input type="text" class="form-control" id="studentName" placeholder="Enter cadet's name">
+          <small id="nameError" class="text-danger d-none">Please enter the student's name.</small>
+        </div>
+        <button id="sortBtn" class="btn btn-primary">Sort</button>
+      </div>
+    </div>
+
+    <div id="studentsContainer" class="row mt-5">
+      <!-- Student cards will be dynamically added here -->
+    </div>
+
+    <div id="expelledContainer" class="row mt-5">
+      <!-- Expelled student cards will be dynamically added here -->
+    </div>
+
+    <div class="mt-5">
+      <button id="filterEnterprise" class="btn btn-primary mr-2">Enterprise</button>
+      <button id="filterVoyager" class="btn btn-primary mr-2">Voyager</button>
+      <button id="filterExcalibur" class="btn btn-primary mr-2">Excalibur</button>
+      <button id="filterExcelsior" class="btn btn-primary">Excelsior</button>
+    </div>
+  </div>
+    </div>
+      <div id="sortedStudents" class="mt-4"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+  </div>
+  
+</body>
+</html>
