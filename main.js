@@ -50,14 +50,14 @@ const expelShip = [
 ];
 // Data structure to hold students and their houses
 const students = [];
-const expelledStudent = [{},{},{}];
+const expelledStudent = [...students];
 
 
 // Function to render students and expelled students
-function renderToDom(containerId, data) {
+function renderToDom(containerId, sortStudent) {
   const container = document.getElementById(containerId);
-  data.innerHTML = '';
-  data.forEach((item) => {
+  sortStudent.innerHTML = '';
+  sortStudent.forEach((item) => {
     const card = `
       <div class="col-md-3 mb-4">
         <div class="card">
@@ -66,7 +66,7 @@ function renderToDom(containerId, data) {
             <h5 class="card-title">Cadet: ${item.name}</h5>
             <p class="card-text">Ship: ${item.ship}</p>
             <p class="card-text">Message: ${item.message}</p>
-            ${item.isExpelled ? "" : '<button class="btn btn-danger btn-sm btn-expel">Expel</button>'}
+            ${item.isExpelled ? "" : '<button class="btn btn-danger onclick="expelStudent(${index}) btn-sm btn-expel">Expel</button>'}
           </div>
         </div>
       </div>
@@ -74,9 +74,9 @@ function renderToDom(containerId, data) {
     container.innerHTML += card;
   });
 }
-
+//Function to start sorting process
 function startSorting() {
-  document.getElementById('sortingHatCard').classList.add('containerId','text-center', 'mb-3');
+  document.getElementById('sortingAICard').classList.add('containerId', 'text-center', 'mb-3');
   document.getElementById('sortingForm').classList.remove('d-none');
 }
 
@@ -89,30 +89,36 @@ function shuffleShips() {
 // Function to sort a student
 function sortStudent(e) {
   e.preventDefault();
-  const studentName = document.getElementById('studentName').value ;
+  const studentName = document.getElementById('studentName').value.trim();
   const ships = shuffleShips();
   const randomShip= selection[1];
 
   if (studentName === '') {
     nameError.classList.remove('d-none');//classList property returns the CSS classnames of an element
-    return("");
+    return;
   }
+  //nameError.classList.add('d-none');
 
   // Add the student to the array of sorted students
-  students.push({ Name: studentName, ship: ships.title, message: ships.message, image: ships.imageUrl });
-
+  students.push({ Name: studentName, ship: ships.title, message: ships.message, image: ships.imageUrl});
+  document.getElementById('sortingForm').classList.add('d-none')//Display nothing
   renderToDom('studentsContainer', students);
 
 }  
 
 // Function to expel a student
 function expelStudent(studentIndex) {
-  const expelledStudent = students.splice('studentIndex', 1,2,3)[0];
+  const expelledStudent = students.splice(studentIndex , 1)[0];
   console.log(expelStudent)
-  //expelledStudent.push({Name: expelledStudent, Ship: expelShip.title, Message: expelShip.message});
-  // renderToDom('studentsContainer', students);
-  // renderToDom('expelledContainer', expelledStudent);
+  expelledStudent.push({Name: expelledStudent, ship: "Bird of Prey", message: "Today is a good Day to Die", image: "/images/KlingonBirdOfPrey.png"});
+  renderToDom('studentsContainer', students);
+  renderToDom('expelledContainer', expelStudent);
 }
+//Filter students by house
+function filterShip(starship){
+  const filterStudents = students.filter((student) => student.starship === starship);
+  renderToDom('studentsContainer', filterStudents)
+} 
 
 
 // Event listeners
@@ -127,9 +133,9 @@ document.getElementById('studentsContainer').addEventListener('click', function 
 document.getElementById('filterEnterprise').addEventListener('click', () => filterShip('Enterprise'));
 document.getElementById('filterVoyager').addEventListener('click', () => filterShip('Voyager'));
 document.getElementById('filterExcalibur').addEventListener('click', () => filterShip('Excalibur'));
-document.getElementById('filterExcelsior').addEventListener('click', () => filterStudentsByHouse('Excelsior'));
+document.getElementById('filterExcelsior').addEventListener('click', () => filterShip('Excelsior'));
 
 const startApp = () => {
-document.querySelector
+
 };
 startApp();
