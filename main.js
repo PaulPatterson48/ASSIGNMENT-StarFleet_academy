@@ -50,14 +50,14 @@ const expelShip = [
 ];
 // Data structure to hold students and their houses
 const students = [];
-const expelledStudent = [...students];
+//const expelledStudent = [...students];
 
 
 // Function to render students and expelled students
-function renderToDom(containerId, sortStudent) {
+function renderToDom(containerId, data) {
   const container = document.getElementById(containerId);
-  sortStudent.innerHTML = '';
-  sortStudent.forEach((item) => {
+  data.innerHTML = '';
+  data.forEach((item) => {
     const card = `
       <div class="col-md-3 mb-4">
         <div class="card">
@@ -66,7 +66,7 @@ function renderToDom(containerId, sortStudent) {
             <h5 class="card-title">Cadet: ${item.name}</h5>
             <p class="card-text">Ship: ${item.ship}</p>
             <p class="card-text">Message: ${item.message}</p>
-            ${item.isExpelled ? "" : '<button class="btn btn-danger onclick="expelStudent(${index}) btn-sm btn-expel">Expel</button>'}
+            ${item.isExpelled ? "" : '<button id="expel-btn-cadet--${starship.id}" class="btn btn-danger  btn-sm btn-expel">Expel</button>'}
           </div>
         </div>
       </div>
@@ -78,6 +78,8 @@ function renderToDom(containerId, sortStudent) {
 function startSorting() {
   document.getElementById('sortingAICard').classList.add('containerId', 'text-center', 'mb-3');
   document.getElementById('sortingForm').classList.remove('d-none');
+  const form = document.querySelector('#sortingForm')
+  sortingForm.reset();
 }
 
 function shuffleShips() {
@@ -89,7 +91,7 @@ function shuffleShips() {
 // Function to sort a student
 function sortStudent(e) {
   e.preventDefault();
-  const studentName = document.getElementById('studentName').value.trim();
+  const studentName = document.getElementById('studentName').value;
   const ships = shuffleShips();
   const randomShip= selection[1];
 
@@ -97,45 +99,58 @@ function sortStudent(e) {
     nameError.classList.remove('d-none');//classList property returns the CSS classnames of an element
     return;
   }
-  //nameError.classList.add('d-none');
 
   // Add the student to the array of sorted students
-  students.push({ Name: studentName, ship: ships.title, message: ships.message, image: ships.imageUrl});
-  document.getElementById('sortingForm').classList.add('d-none')//Display nothing
+  students.push({ name: studentName, ship: ships.title, message: ships.message, image: ships.imageUrl});
   renderToDom('studentsContainer', students);
-
 }  
+
 
 // Function to expel a student
 function expelStudent(studentIndex) {
-  const expelledStudent = students.splice(studentIndex , 1)[0];
-  console.log(expelStudent)
-  expelledStudent.push({Name: expelledStudent, ship: "Bird of Prey", message: "Today is a good Day to Die", image: "/images/KlingonBirdOfPrey.png"});
-  renderToDom('studentsContainer', students);
-  renderToDom('expelledContainer', expelStudent);
+  //studentIndex.preventDefault();
+  const expelledStudent = students.splice(studentIndex,1);
+  expelledStudent.isExpelled = true; 
+  //console.log(expelledStudent)
+  expelledStudent.push({name:expelledStudent, ship: "Bird of Prey", message: "Today is a good Day to Die", image: "/images/KlingonBirdOfPrey.png"});
+  renderToDom('expelledContainer', expelledStudent);
 }
 //Filter students by house
 function filterShip(starship){
   const filterStudents = students.filter((student) => student.starship === starship);
-  renderToDom('studentsContainer', filterStudents)
 } 
 
 
 // Event listeners
 document.getElementById('startSortingBtn').addEventListener('click', startSorting);
 document.getElementById('sortBtn').addEventListener('click', sortStudent);
-document.getElementById('studentsContainer').addEventListener('click', function (e) {
+document.getElementById('studentsContainer').addEventListener('click',(e)  => {
   if (e.target.classList.contains('btn-expel')) {
-     const studentIndex = e.target.closest('.col-md-3').dataset.index; //Returns closest ancestor element or itself
+    const studentIndex = e.target.closest('.card-body').dataset.index; 
+    console.log(studentIndex)
+    //const eStudent = document.getElementById('studentName').value
     expelStudent(studentIndex);
+
   }
-});
+ });
+  // const expel = (e)=>  {
+    // if(e.target.id.includes("expel-btn")){
+      // const [, int] = e.target.id.split('--')
+      // const index = starship.findIndex((es) => es.id === Number(id));
+      // starship[index].isExpelled = true
+      //students.splice(index,0)
+      // console.log(starship)
+     // cardsOnDom(ExpelledContainer)
+    // }
+  // };
+
 document.getElementById('filterEnterprise').addEventListener('click', () => filterShip('Enterprise'));
 document.getElementById('filterVoyager').addEventListener('click', () => filterShip('Voyager'));
 document.getElementById('filterExcalibur').addEventListener('click', () => filterShip('Excalibur'));
 document.getElementById('filterExcelsior').addEventListener('click', () => filterShip('Excelsior'));
+//document.getElementById('')
 
 const startApp = () => {
-
+//document.querySelector('#expel').addEventListener('click', expel)
 };
 startApp();
