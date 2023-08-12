@@ -50,11 +50,11 @@ const expelShip = [
 ];
 // Data structure to hold students and their houses
 const students = [];
-//const expelledStudent = [...students];
+
 
 
 // Function to render students and expelled students
-function renderToDom(containerId, data) {
+const renderToDom =(containerId, data)  =>{
   const container = document.getElementById(containerId);
   data.innerHTML = '';
   data.forEach((item) => {
@@ -66,7 +66,7 @@ function renderToDom(containerId, data) {
             <h5 class="card-title">Cadet: ${item.name}</h5>
             <p class="card-text">Ship: ${item.ship}</p>
             <p class="card-text">Message: ${item.message}</p>
-            ${item.isExpelled ? "" : '<button id="expel-btn-cadet--${starship.id}" class="btn btn-danger  btn-sm btn-expel">Expel</button>'}
+            ${item.isExpelled ? "" : '<button id="expel-btn--${starship.id}" class="btn btn-danger  btn-sm btn-expel">Expel</button>'}
           </div>
         </div>
       </div>
@@ -75,22 +75,23 @@ function renderToDom(containerId, data) {
   });
 }
 //Function to start sorting process
-function startSorting() {
+const startSorting =()  =>{
   document.getElementById('sortingAICard').classList.add('containerId', 'text-center', 'mb-3');
   document.getElementById('sortingForm').classList.remove('d-none');
   const form = document.querySelector('#sortingForm')
   sortingForm.reset();
 }
 
-function shuffleShips() {
+const shuffleShips = ()  =>{
   return selection = starship[Math.floor(Math.random() * starship.length)]
 }
 
 
 
 // Function to sort a student
-function sortStudent(e) {
+const sortStudent =(e) => {
   e.preventDefault();
+  
   const studentName = document.getElementById('studentName').value;
   const ships = shuffleShips();
   const randomShip= selection[1];
@@ -107,16 +108,16 @@ function sortStudent(e) {
 
 
 // Function to expel a student
-function expelStudent(studentIndex) {
-  //studentIndex.preventDefault();
-  const expelledStudent = students.splice(studentIndex,1);
+const expelStudent =(studentIndex) => {
+  studentIndex.preventDefault();
+  const expelledStudent = studentIndex.splice(studentIndex,1);
   expelledStudent.isExpelled = true; 
-  //console.log(expelledStudent)
+  console.log(expelStudent)
   expelledStudent.push({name:expelledStudent, ship: "Bird of Prey", message: "Today is a good Day to Die", image: "/images/KlingonBirdOfPrey.png"});
   renderToDom('expelledContainer', expelledStudent);
 }
 //Filter students by house
-function filterShip(starship){
+const filterShip = (starship) =>{
   const filterStudents = students.filter((student) => student.starship === starship);
 } 
 
@@ -126,23 +127,25 @@ document.getElementById('startSortingBtn').addEventListener('click', startSortin
 document.getElementById('sortBtn').addEventListener('click', sortStudent);
 document.getElementById('studentsContainer').addEventListener('click',(e)  => {
   if (e.target.classList.contains('btn-expel')) {
-    const studentIndex = e.target.closest('.card-body').dataset.index; 
+    const [, id] = e.target.id.split('--')
+    const studentIndex = students.findIndex(item => item.id === Number(id))
+    students.splice(studentIndex,0)
+    //const studentIndex = e.target.closest('.card-body').dataset.index; 
     console.log(studentIndex)
     //const eStudent = document.getElementById('studentName').value
-    expelStudent(studentIndex);
+    //epelledStudent(studentIndex);
 
   }
  });
-  // const expel = (e)=>  {
-    // if(e.target.id.includes("expel-btn")){
-      // const [, int] = e.target.id.split('--')
-      // const index = starship.findIndex((es) => es.id === Number(id));
-      // starship[index].isExpelled = true
-      //students.splice(index,0)
-      // console.log(starship)
-     // cardsOnDom(ExpelledContainer)
-    // }
-  // };
+// document.querySelector('studentsContainer')
+//  studentsContainer.addEventListener('click', (e) =>{
+  // if (e.target.id.includes("expel-btn")){
+    // const [,id] =e.target.id.split('--')
+    // const studentIndex = students.findIndex(item => item.id === Number(id))
+    // students.splice(studentIndex,1);
+    // console.log(studentIndex)
+  // } 
+//  })
 
 document.getElementById('filterEnterprise').addEventListener('click', () => filterShip('Enterprise'));
 document.getElementById('filterVoyager').addEventListener('click', () => filterShip('Voyager'));
