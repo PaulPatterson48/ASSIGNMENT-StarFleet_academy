@@ -5,6 +5,7 @@ const starship = [
     imageUrl: "/images/EnterpriseA.png",
     shipClass: "Constitution-class",
     message:"Congrats, you're on the Enterprise!",
+    color: "Grey",
     cadet: "",
     onboard: true
   },
@@ -14,6 +15,7 @@ const starship = [
     imageUrl: "/images/Voyager.png",
     shipClass: "Intrepid-class",
     message:"Congrats, you're on the Voyager" ,
+    color: "Blue",
     cadet: "",
     onboard: true
   },
@@ -23,6 +25,7 @@ const starship = [
     imageUrl: "/images/USSExcalibur.png",
     shipClass: "Ambassador-class",
     message:"Congrats, you're onboard Excalibur"  ,
+    color: "purple", 
     cadet: "",
     onboard: true 
   },
@@ -32,6 +35,7 @@ const starship = [
     imageUrl: "/images/USSExcelsior.png",
     shipClass: "Excelsior-class",
     message:"Congrats, you're on Excelsior!" ,
+    color: "green",
     cadet: "",
     onboard: true
   },
@@ -40,33 +44,33 @@ const starship = [
 const expelShip = [
   {
     id:5,
-    title: "Birdofprey",
-    imageUrl: "/image/KlingonBirdOfPrey.png",
+    title: "Bird of Prey",
+    imageUrl: "/images/KlingonBirdOfPrey.png",
     shipClass: "B'rel-class",
     message:"Today is a good day to die",
+    color: "orange",
     cadet: "",
     onboard: false
   }
 ];
 // Data structure to hold students and their houses
 const students = [];
-
-
+const expelledStudent = [];
 
 // Function to render students and expelled students
-const renderToDom =(containerId, data)  =>{
+const renderToDom =(containerId, data) =>{
   const container = document.getElementById(containerId);
-  data.innerHTML = '';
-  data.forEach((item) => {
+  container.innerHTML = '';
+  data.forEach((cadet) => {
     const card = `
       <div class="col-md-3 mb-4">
         <div class="card">
           <div class="card-body">
-            <img src="${item.image}" class="car-img-top"></img>
-            <h5 class="card-title">Cadet: ${item.name}</h5>
-            <p class="card-text">Ship: ${item.ship}</p>
-            <p class="card-text">Message: ${item.message}</p>
-            ${item.isExpelled ? "" : '<button id="expel-btn--${starship.id}" class="btn btn-danger  btn-sm btn-expel">Expel</button>'}
+          <img src="${cadet.image}" class="car-img-top"> </img>
+            <h5 class="card-title">Cadet: ${cadet.name}</h5>
+            <p class="card-text">Ship: ${cadet.ship}</p>
+            <p class="card-text">Message: ${cadet.message}</p>
+            ${cadet.isExpelled ? "" : `<button id="expel-btn--${cadet.id}" class="btn btn-danger  btn-sm btn-expel">Expel</button>`}
           </div>
         </div>
       </div>
@@ -74,86 +78,58 @@ const renderToDom =(containerId, data)  =>{
     container.innerHTML += card;
   });
 }
-//Function to start sorting process
-const startSorting =()  =>{
-  document.getElementById('sortingAICard').classList.add('containerId', 'text-center', 'mb-3');
+
+// Function to start sorting process
+const startSorting = () => {
+  document.getElementById('sortingAICard').classList.add('containerId','text-center', 'mb-3');
   document.getElementById('sortingForm').classList.remove('d-none');
-  const form = document.querySelector('#sortingForm')
-  sortingForm.reset();
 }
-
-const shuffleShips = ()  =>{
-  return selection = starship[Math.floor(Math.random() * starship.length)]
-}
-
-
 
 // Function to sort a student
 const sortStudent =(e) => {
   e.preventDefault();
-  
-  const studentName = document.getElementById('studentName').value;
-  const ships = shuffleShips();
-  const randomShip= selection[1];
-
-  if (studentName === '') {
-    nameError.classList.remove('d-none');//classList property returns the CSS classnames of an element
-    return;
+  const randomShips = starship[Math.floor(Math.random() * starship.length)];
+  const studentObj = {
+    id: starship.length + 1,
+    image: randomShips.imageUrl,
+    studentName: document.getElementById('studentName').value,
+    ship: randomShips.title,
+    message: randomShips.message,
+    isExpelled: false
   }
 
-  // Add the student to the array of sorted students
-  students.push({ name: studentName, ship: ships.title, message: ships.message, image: ships.imageUrl});
+  students.push({id: studentObj.id, image: studentObj.image, name: studentObj.studentName, ship: studentObj.ship, message: studentObj.message})
+
+
+  document.getElementById('sortingForm').classList.add('d-none');
   renderToDom('studentsContainer', students);
-}  
-
-
-// Function to expel a student
-const expelStudent =(studentIndex) => {
-  studentIndex.preventDefault();
-  const expelledStudent = studentIndex.splice(studentIndex,1);
-  expelledStudent.isExpelled = true; 
-  console.log(expelStudent)
-  expelledStudent.push({name:expelledStudent, ship: "Bird of Prey", message: "Today is a good Day to Die", image: "/images/KlingonBirdOfPrey.png"});
-  renderToDom('expelledContainer', expelledStudent);
 }
-//Filter students by house
-const filterShip = (starship) =>{
-  const filterStudents = students.filter((student) => student.starship === starship);
-} 
+
+const filterStudentsByShip=(ships) =>{
+  const filteredStudents = starship.filter((s) => s.ship === ships);
+  console.log(filteredStudents)
+}
 
 
 // Event listeners
 document.getElementById('startSortingBtn').addEventListener('click', startSorting);
 document.getElementById('sortBtn').addEventListener('click', sortStudent);
-document.getElementById('studentsContainer').addEventListener('click',(e)  => {
-  if (e.target.classList.contains('btn-expel')) {
-    const [, id] = e.target.id.split('--')
-    const studentIndex = students.findIndex(item => item.id === Number(id))
-    students.splice(studentIndex,0)
-    //const studentIndex = e.target.closest('.card-body').dataset.index; 
-    console.log(studentIndex)
-    //const eStudent = document.getElementById('studentName').value
-    //epelledStudent(studentIndex);
 
+document.getElementById('studentsContainer').addEventListener('click', (e) => {
+  if (e.target.classList.contains('btn-expel')){
+    e.preventDefault();
+    const expelCadet = students.find((e) => e);
+    console.log(expelCadet)
+    const eShip = expelShip.find((a) => a);
+    expelledStudent.push({id: expelCadet.id, image:eShip.imageUrl , name: expelCadet.name, ship: eShip.title, message: eShip.message, isExpelled: true })
+     renderToDom('expelledContainer', expelledStudent)
   }
- });
-// document.querySelector('studentsContainer')
-//  studentsContainer.addEventListener('click', (e) =>{
-  // if (e.target.id.includes("expel-btn")){
-    // const [,id] =e.target.id.split('--')
-    // const studentIndex = students.findIndex(item => item.id === Number(id))
-    // students.splice(studentIndex,1);
-    // console.log(studentIndex)
-  // } 
-//  })
 
-document.getElementById('filterEnterprise').addEventListener('click', () => filterShip('Enterprise'));
-document.getElementById('filterVoyager').addEventListener('click', () => filterShip('Voyager'));
-document.getElementById('filterExcalibur').addEventListener('click', () => filterShip('Excalibur'));
-document.getElementById('filterExcelsior').addEventListener('click', () => filterShip('Excelsior'));
-//document.getElementById('')
-
-const startApp = () => {
-//document.querySelector('#expel').addEventListener('click', expel)
-};
-startApp();
+})
+  
+const startApp = () =>{
+document.getElementById('filterEnterprise').addEventListener('click', () => filterStudentsByShip('Enterprise'));
+document.getElementById('filterVoyager').addEventListener('click', () => filterStudentsByShip('Voyager'));
+document.getElementById('filterExcalibur').addEventListener('click', () => filterStudentsByShip('Excalibur'));
+document.getElementById('filterExcelsior').addEventListener('click', () => filterStudentsByShip('Excelsior'));
+}
