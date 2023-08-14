@@ -106,10 +106,40 @@ const sortStudent =(e) => {
 }
 
 const filterStudentsByShip=(ships) =>{
-  const filteredStudents = starship.filter((s) => s.ship === ships);
-  console.log(filteredStudents)
+  if (ships.target.id.includes('Enterprise')){
+    const enterprise = starship.filter(item.title.toLowerCase() === 'enterprise')
+    renderCards(enterprise)
+    //console.log('enterprise')
+  }
+  if(ships.target.id.includes('Voyager')){
+    const voyager = starship.filter(item.title.toLowerCase() === 'voyager' )
+    renderCards(voyager)
+    console.log('voyager')
+  }
+  if(ships.target.id.includes('Excalibur')){
+    const excalibur = starship.filter(item.title.toLowerCase() === 'excalibur')
+    renderCards(excalibur)
+    console.log('excalibur')
+  }
+  if(ships.target.id.includes('Excelsior')){
+    const excelsior = starship.filter(item.title.toLowerCase() === 'excelsior')
+    renderCards( excelsior)
+    console.log('excelsior')
+  }
+  shipList().sort(((a,b) => a.title.localeCompare(b.title))).forEach(item => {
+    table += tableRow(item)
+    
+  })
+  `</tbody></table>`
+  renderToDom('#cards', table)
 }
-
+const shipList = () => {
+  return starship.map(s => ({
+    image: s.imageUrl,
+    ship: s.title,
+    message: s.message
+  }))
+}
 
 // Event listeners
 document.getElementById('startSortingBtn').addEventListener('click', startSorting);
@@ -119,7 +149,6 @@ document.getElementById('studentsContainer').addEventListener('click', (e) => {
   if (e.target.classList.contains('btn-expel')){
     e.preventDefault();
     const expelCadet = students.find((e) => e);
-    console.log(expelCadet)
     const eShip = expelShip.find((a) => a);
     expelledStudent.push({id: expelCadet.id, image:eShip.imageUrl , name: expelCadet.name, ship: eShip.title, message: eShip.message, isExpelled: true })
      renderToDom('expelledContainer', expelledStudent)
@@ -128,8 +157,6 @@ document.getElementById('studentsContainer').addEventListener('click', (e) => {
 })
   
 const startApp = () =>{
-document.getElementById('filterEnterprise').addEventListener('click', () => filterStudentsByShip('Enterprise'));
-document.getElementById('filterVoyager').addEventListener('click', () => filterStudentsByShip('Voyager'));
-document.getElementById('filterExcalibur').addEventListener('click', () => filterStudentsByShip('Excalibur'));
-document.getElementById('filterExcelsior').addEventListener('click', () => filterStudentsByShip('Excelsior'));
+  document.querySelector('#btnRow').addEventListener('click', filterStudentsByShip)
 }
+startApp();
